@@ -3,8 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "./node_modules/@prisma/client"
-  format   = "prisma-fmt"
 }
 
 datasource db {
@@ -29,7 +27,7 @@ model Profile {
   profileId          String               @id @default(uuid())
   firstName          String
   lastName           String
-  profileImage       String
+  profileImage       String?
   role               userRole
   contactNumber      String?
   address            String?

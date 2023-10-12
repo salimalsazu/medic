@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import bcrypt from 'bcrypt';
 import { Request } from 'express';
 import httpStatus from 'http-status';
@@ -14,7 +16,9 @@ import {
   IUserCreate,
   IUserLogin,
 } from './auth.interface';
+import { userRole } from '@prisma/client';
 
+// ! user create
 const createNewUser = async (req: Request) => {
   const file = req.file as IUploadFile;
 
@@ -25,9 +29,10 @@ const createNewUser = async (req: Request) => {
   if (uploadedImage) {
     req.body.profileImage = uploadedImage.secure_url;
   }
-  const data = req.body as IUserCreate;
+  const data = (await req.body) as IUserCreate;
 
   const { password, email } = data;
+
   const hashedPassword = await bcrypt.hash(
     password,
     Number(config.bcrypt_salt_rounds)
@@ -46,17 +51,16 @@ const createNewUser = async (req: Request) => {
     const profileData = {
       firstName: data.firstName,
       lastName: data.lastName,
-      profileImage: data?.profileImage,
-      role: data?.role,
+      profileImage: data.profileImage!,
+      role: data.role,
     };
 
     const createdProfile = await transactionClient.profile.create({
       data: profileData,
+      select: {
+        profileId: true,
+      },
     });
-
-    if (!createdProfile) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Profile creation failed');
-    }
 
     const createdUser = await transactionClient.user.create({
       data: {
@@ -69,16 +73,15 @@ const createNewUser = async (req: Request) => {
         },
       },
       select: {
-        userId: true,
-        email: true,
+        profileId: true,
         createdAt: true,
-        userIsActive: true,
-        profile: true,
+        email: true,
+        userId: true,
       },
     });
 
-    if (!createdUser) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'User creation failed');
+    if (!createdUser || !createdProfile) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Creating New User Failed');
     }
 
     return createdUser;
@@ -87,7 +90,7 @@ const createNewUser = async (req: Request) => {
   return newUser;
 };
 
-//login
+//! login
 const userLogin = async (
   loginData: IUserLogin
 ): Promise<ILoginUserResponse> => {
@@ -97,11 +100,13 @@ const userLogin = async (
     where: {
       email,
     },
-    include: {
+    select: {
+      userId: true,
+      password: true,
       profile: {
         select: {
-          profileId: true,
           role: true,
+          profileId: true,
         },
       },
     },
@@ -117,24 +122,25 @@ const userLogin = async (
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is incorrect !!');
   }
 
-  const { userId, profile } = isUserExist;
+  type TokenData = {
+    userId: string;
+    role: userRole;
+    profileId: string;
+  };
 
-  // create access token & refresh token
+  const tokenData: TokenData = {
+    userId: isUserExist.userId,
+    role: isUserExist?.profile?.role!,
+    profileId: isUserExist.profile?.profileId!,
+  };
+
   const accessToken = jwtHelpers.createToken(
-    {
-      userId,
-      role: profile?.role,
-      profileId: profile?.profileId,
-    },
+    tokenData,
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
   const refreshToken = jwtHelpers.createToken(
-    {
-      userId: isUserExist.userId,
-      role: profile?.role,
-      profileId: profile?.profileId,
-    },
+    tokenData,
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
@@ -149,6 +155,9 @@ const userLogin = async (
 const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   // ! verify token
   let verifiedToken = null;
+
+  console.log(token, 'shafin=========');
+
   try {
     verifiedToken = jwtHelpers.verifyToken(
       token,
@@ -166,7 +175,9 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
     where: {
       userId,
     },
-    include: {
+    select: {
+      userId: true,
+      password: true,
       profile: {
         select: {
           role: true,
@@ -178,13 +189,22 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exists!!');
   }
+
+  type TokenData = {
+    userId: string;
+    role: userRole;
+    profileId: string;
+  };
+
+  const tokenData: TokenData = {
+    userId: isUserExist.userId,
+    role: isUserExist?.profile?.role!,
+    profileId: isUserExist?.profile?.profileId!,
+  };
+
   // generate new token
   const newAccessToken = jwtHelpers.createToken(
-    {
-      userId: isUserExist?.userId,
-      role: isUserExist?.profile?.role,
-      profileId: isUserExist?.profile?.profileId,
-    },
+    tokenData,
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );

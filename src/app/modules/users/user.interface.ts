@@ -1,7 +1,7 @@
-import { Orders, Styles, UserRoles } from '@prisma/client';
+import { AppointmentBooking, Blog, Doctor, Faq, FeedBackForm, Product, ReviewAndRatings, User, userRole } from '@prisma/client';
 
 export type IRequestUser = {
-  role: UserRoles;
+  role: userRole;
   userId: string;
   profileId: string;
   iat: number;
@@ -13,20 +13,33 @@ export type IUpdateUserRequest = {
   lastName: string;
   profileImage: string;
   password: string;
-  role: UserRoles;
+  role: userRole;
 };
 
 export type UserProfile = {
   profileId: string;
   firstName: string;
   lastName: string;
-  role: UserRoles;
+  contactNumber: string | null
+  address: string | null;
+  coverPhoto: string | null;
+  bloodGroup: string | null;
+  role: userRole;
   profileImage: string | null;
   createdAt: Date;
   updatedAt: Date;
-  Orders: Orders[];
-  Styles: Styles[];
+  reviewAndRatings: ReviewAndRatings[] ;
+  appointmentBooking: AppointmentBooking[];
+  products: Product[];
+  blogs: Blog[];
+  feedBackForms: FeedBackForm[];
+  Faq: Faq[];
+  doctor: Doctor | null;
+  user: User | null;
 };
+
+
+
 
 export type IUsersResponse = {
   userId: string;
@@ -35,11 +48,12 @@ export type IUsersResponse = {
   updatedAt: Date;
   profile: UserProfile | null;
 };
+
 export type IUpdateProfileReqAndResponse = {
   firstName?: string;
   lastName?: string;
   profileImage?: string;
-  role?: UserRoles;
+  role?: userRole;
 };
 export type IUserUpdateReqAndResponse = {
   email?: string;

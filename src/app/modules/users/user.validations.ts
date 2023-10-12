@@ -1,4 +1,4 @@
-import { UserRoles } from '@prisma/client';
+import {  userRole } from '@prisma/client';
 import { z } from 'zod';
 import { ZodUserRoles } from './users.constants';
 
@@ -24,7 +24,7 @@ const createUser = z.object({
       required_error: 'Role is Required',
       invalid_type_error: 'role must be in string',
     })
-    .default(UserRoles.USER),
+    .default(userRole.USER),
 });
 
 const updateUser = z.object({

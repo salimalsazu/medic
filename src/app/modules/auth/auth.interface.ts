@@ -1,11 +1,11 @@
-import { UserRoles } from '@prisma/client';
+import { userRole } from '@prisma/client';
 export type IUserCreate = {
   firstName: string;
   lastName: string;
   profileImage?: string | null | undefined;
   email: string;
   password: string;
-  role?: UserRoles;
+  role?: userRole;
 };
 
 export type IUserProfileResponse = {
@@ -13,7 +13,7 @@ export type IUserProfileResponse = {
   firstName: string;
   lastName: string;
   profileImage?: string | null | undefined;
-  role: UserRoles | null;
+  role: userRole | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -36,4 +36,15 @@ export type ILoginUserResponse = {
 };
 export type IRefreshTokenResponse = {
   accessToken: string;
+};
+
+export type IProfileUpdateRequest = {
+  firstName?: string;
+  lastName?: string;
+  profileImage?: string;
+  contactNumber?: string;
+  address?: string;
+  coverPhoto?: string;
+  bloodGroup?: string;
+  role?: userRole;
 };
