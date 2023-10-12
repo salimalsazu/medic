@@ -1,0 +1,6 @@
+{
+  "prisma.fileWatcher": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFoldingRangeProvider": "Prisma.prisma",
+  "editor.defaultFormatter": "Prisma.prisma"
+}
