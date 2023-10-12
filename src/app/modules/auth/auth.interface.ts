@@ -5,7 +5,9 @@ export type IUserCreate = {
   profileImage?: string | null | undefined;
   email: string;
   password: string;
-  role?: userRole;
+  role: userRole;
+  qualification: string;
+  specializationId: string;
 };
 
 export type IUserProfileResponse = {
@@ -36,15 +38,4 @@ export type ILoginUserResponse = {
 };
 export type IRefreshTokenResponse = {
   accessToken: string;
-};
-
-export type IProfileUpdateRequest = {
-  firstName?: string;
-  lastName?: string;
-  profileImage?: string;
-  contactNumber?: string;
-  address?: string;
-  coverPhoto?: string;
-  bloodGroup?: string;
-  role?: userRole;
 };

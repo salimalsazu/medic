@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Prisma, Specialization } from '@prisma/client';
+import { Category, Prisma, Specialization } from '@prisma/client';
 import { Request } from 'express';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
@@ -8,51 +8,55 @@ import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import {
+  categoryFields,
+  categoryRelationalFieldsMapper,
+  categorySearchableFields,
   specializationFields,
   specializationRelationalFieldsMapper,
   specializationSearchableFields,
-} from './specialization.constants';
+} from './category.constants';
 import {
+  ICategoryFilterRequest,
+  ICategoryRequest,
   ISpecializationFilterRequest,
-  ISpecializationRequest,
-} from './specialization.interface';
+} from './category.interface';
 
 // modules
 
-const createSpecialization = async (
+const createCategory = async (
   profileId: string,
   req: Request
-): Promise<Specialization> => {
+): Promise<Category> => {
  
-  const data = req.body as ISpecializationRequest;
+  const data = req.body as ICategoryRequest;
 
   console.log("data",data);
 
   const result = await prisma.$transaction(async transactionClient => {
 
-    const newSpecializationData = {
-      specializationName: data.specializationName,
+    const newCategoryData = {
+      categoryName: data.categoryName,
       description: data.description,
     };
 
-    const createdSpecialization = await transactionClient.specialization.create({
-      data: newSpecializationData,
+    const createdSpecialization = await transactionClient.category.create({
+      data: newCategoryData,
     });
     return createdSpecialization;
   });
 
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Specialization creation failed');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Category creation failed');
   }
   return result;
 };
 
 
 
-const getAllSpecialization = async (
-  filters: ISpecializationFilterRequest,
+const getAllCategory = async (
+  filters: ICategoryFilterRequest,
   options: IPaginationOptions
-): Promise<IGenericResponse<Specialization[]>> => {
+): Promise<IGenericResponse<Category[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
   const { searchTerm, ...filterData } = filters;
@@ -61,7 +65,7 @@ const getAllSpecialization = async (
 
   if (searchTerm) {
     andConditions.push({
-      OR: specializationSearchableFields.map((field: any) => ({
+      OR: categorySearchableFields.map((field: any) => ({
         [field]: {
           contains: searchTerm,
           mode: 'insensitive',
@@ -73,9 +77,9 @@ const getAllSpecialization = async (
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.keys(filterData).map(key => {
-        if (specializationFields.includes(key)) {
+        if (categoryFields.includes(key)) {
           return {
-            [specializationRelationalFieldsMapper[key]]: {
+            [categoryRelationalFieldsMapper[key]]: {
               id: (filterData as any)[key],
             },
           };
@@ -90,13 +94,10 @@ const getAllSpecialization = async (
     });
   }
 
-  const whereConditions: Prisma.SpecializationWhereInput =
+  const whereConditions: Prisma.CategoryWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  const result = await prisma.specialization.findMany({
-    include: {
-      doctors:true
-    },
+  const result = await prisma.category.findMany({
     where: whereConditions,
     skip,
     take: limit,
@@ -107,7 +108,7 @@ const getAllSpecialization = async (
             createdAt: 'desc',
           },
   });
-  const total = await prisma.specialization.count({
+  const total = await prisma.category.count({
     where: whereConditions,
   });
   const totalPage = Math.ceil(total / limit);
@@ -124,7 +125,7 @@ const getAllSpecialization = async (
 
 
 
-export const SpecializationService = {
-  createSpecialization,
-  getAllSpecialization,
+export const CategoryService = {
+  createCategory,
+  getAllCategory,
 };

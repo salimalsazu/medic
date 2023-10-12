@@ -22,15 +22,15 @@ import { userRole } from '@prisma/client';
 const createNewUser = async (req: Request) => {
   const file = req.file as IUploadFile;
 
-  const uploadedImage = await FileUploadHelper.uploadUserImageToCloudinary(
-    file
-  );
+  const uploadedImage = await FileUploadHelper.uploadImageToCloudinary(file);
 
   if (uploadedImage) {
     req.body.profileImage = uploadedImage.secure_url;
   }
   const data = (await req.body) as IUserCreate;
 
+  console.log("data", data);
+  
   const { password, email } = data;
 
   const hashedPassword = await bcrypt.hash(
@@ -52,15 +52,35 @@ const createNewUser = async (req: Request) => {
       firstName: data.firstName,
       lastName: data.lastName,
       profileImage: data.profileImage!,
-      role: data.role,
+      role: data.role!,
     };
 
     const createdProfile = await transactionClient.profile.create({
-      data: profileData,
+      data: {
+        ...profileData,
+      },
       select: {
         profileId: true,
+        role: true,
       },
     });
+
+    console.log("specializationId", data.specializationId)
+
+    if (createdProfile.role == userRole.DOCTOR) {
+      await transactionClient.doctor.create({
+        data: {
+          qualification: data.qualification,
+          specializationId: data.specializationId,
+          profileId: createdProfile.profileId,
+        },
+        select: {
+          profileId: true,
+          createdAt: true,
+        },
+      });
+    }
+   
 
     const createdUser = await transactionClient.user.create({
       data: {
@@ -156,7 +176,6 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   // ! verify token
   let verifiedToken = null;
 
-  console.log(token, 'shafin=========');
 
   try {
     verifiedToken = jwtHelpers.verifyToken(
