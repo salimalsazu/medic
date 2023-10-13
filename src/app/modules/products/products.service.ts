@@ -157,7 +157,7 @@ const getSingleProduct = async (productId: string): Promise<Product | null> => {
   return result;
 };
 
-// ! update style ----------------------
+// ! update Service ----------------------
 const updateProduct = async (
   productId: string,
   payload: Partial<IUpdateProductRequest>

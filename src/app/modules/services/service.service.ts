@@ -10,11 +10,13 @@ import {
   IServiceFilterRequest,
   ICreateNewBlogResponse,
   IServiceCreateRequest,
+  IUpdateServiceRequest,
+  ICreateNewServiceResponse,
 } from './service.interface';
 
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { IGenericResponse } from '../../../interfaces/common';
-import { Blog, Prisma, Service } from '@prisma/client';
+import { Prisma, Service } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import {
   serviceRelationalFields,
@@ -26,13 +28,8 @@ import {
 
 const createNewService = async (
   req: Request
-): Promise<ICreateNewBlogResponse> => {
-  const file = req.file as IUploadFile;
-  const uploadedImage = await FileUploadHelper.uploadImageToCloudinary(file);
+): Promise<ICreateNewServiceResponse> => {
 
-  if (uploadedImage) {
-    req.body.serviceImage = uploadedImage.secure_url;
-  }
   const data = req.body as IServiceCreateRequest;
 
   const serviceData = {
@@ -60,19 +57,16 @@ const createNewService = async (
 
     const createdService = await transactionClient.service.create({
       data: serviceData,
-      select: {
-        serviceId: true,
-        categoryId: true,
-        createdAt: true,
-      },
     });
     return createdService;
   });
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Blog creation failed');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Service creation failed');
   }
   return result;
 };
+
+
 
 const getAllServices = async (
   filters: IServiceFilterRequest,
@@ -151,25 +145,96 @@ const getAllServices = async (
   };
 };
 
-const getSingleService = async (blogId: string): Promise<Blog | null> => {
+const getSingleService = async (serviceId: string): Promise<Service | null> => {
   //
 
-  const result = await prisma.blog.findUnique({
+  const result = await prisma.service.findUnique({
     where: {
-      blogId,
-    },
-    include: {
-      profile: true,
-    },
+      serviceId,
+    }
   });
+
   if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Blog Not Found !!!');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Service Not Found !!!');
   }
   return result;
 };
+
+// ! update Service ----------------------
+const updateService = async (
+  serviceId: string,
+  payload: Partial<IUpdateServiceRequest>
+): Promise<Service | null> => {
+
+  const isExistService = await prisma.service.findUnique({
+    where: {
+      serviceId
+    },
+  });
+
+  if (!isExistService) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Service Not Found !!!');
+  }
+
+  const updateServiceData = {
+    serviceName: payload?.serviceName,
+    description: payload?.description,
+    serviceImage: payload?.serviceImage,
+    location: payload?.location,
+    categoryId: payload?.categoryId,
+    servicePrice: payload?.servicePrice
+  };
+
+  const result = await prisma.service.update({
+    where: {
+      serviceId,
+    },
+    data: updateServiceData,
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Service Updating Failed !!!');
+  }
+  return result;
+};
+
+
+// ! delete Service ----------------------
+
+const SingleServiceDelete = async (serviceId: string): Promise<Service | null> => {
+  //
+
+  const isExistService = await prisma.service.findUnique({
+    where: {
+      serviceId,
+    }
+  });
+
+
+  if (!isExistService) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Service Not Found !!!');
+  }
+
+  const result = await prisma.service.delete({
+    where: {
+      serviceId
+  }
+})
+
+  if (!result) {
+  throw new ApiError(httpStatus.NOT_FOUND, 'Service Not deleted !!!')
+}
+
+  return result;
+};
+
+
+
 
 export const MedService = {
   createNewService,
   getAllServices,
   getSingleService,
+  SingleServiceDelete,
+  updateService
 };

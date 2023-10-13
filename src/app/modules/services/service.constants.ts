@@ -4,6 +4,16 @@ export const blogFilterableFields: string[] = [
   'createdAt',
 ];
 
+
+export const ServiceFilterableFields: string[] = [
+  'searchTerm',
+  'serviceName',
+  'createdAt',
+  "location",
+  'servicePrice',
+];
+
+
 export const serviceSearchableFields: string[] = [
   'serviceId',
   'serviceName',
