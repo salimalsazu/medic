@@ -7,7 +7,7 @@ import { BlogService } from './blogs.service';
 import pick from '../../../shared/pick';
 import { blogFilterableFields } from './blogs.constants';
 
-const createNewStyle = catchAsync(async (req: Request, res: Response) => {
+const createNewBlog = catchAsync(async (req: Request, res: Response) => {
   const profileId = (req.user as IRequestUser).profileId;
   const result = await BlogService.createNewBlog(profileId, req);
 
@@ -18,6 +18,7 @@ const createNewStyle = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getAllBlogs = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, blogFilterableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
@@ -45,8 +46,41 @@ const getSingleBlog = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+const updateBlog = catchAsync(
+  async (req: Request, res: Response) => {
+    const { blogId } = req.params;
+    const result = await BlogService.updateBlog(
+      blogId,
+      req.body
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Updated successfully',
+      data: result,
+    });
+  }
+);
+
+
+const deleteBlog = catchAsync(async (req: Request, res: Response) => {
+  const { blogId } = req.params;
+  const result = await BlogService.deleteBlog(blogId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `${result?.blogTitle} Deleted successfully `,
+  });
+});
+
+
 export const BlogsController = {
-  createNewStyle,
+  createNewBlog,
   getAllBlogs,
   getSingleBlog,
+  deleteBlog,
+  updateBlog
 };

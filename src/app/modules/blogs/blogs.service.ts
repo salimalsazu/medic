@@ -9,6 +9,7 @@ import prisma from '../../../shared/prisma';
 import {
   IBlogCreateRequest,
   IBlogFilterRequest,
+  IBlogUpdateRequest,
   ICreateNewBlogResponse,
 } from './blogs.interface';
 
@@ -28,12 +29,6 @@ const createNewBlog = async (
   profileId: string,
   req: Request
 ): Promise<ICreateNewBlogResponse> => {
-  const file = req.file as IUploadFile;
-  const uploadedImage = await FileUploadHelper.uploadImageToCloudinary(file);
-
-  if (uploadedImage) {
-    req.body.blogImage = uploadedImage.secure_url;
-  }
   const data = req.body as IBlogCreateRequest;
 
   const result = await prisma.$transaction(async transactionClient => {
@@ -154,8 +149,77 @@ const getSingleBlog = async (blogId: string): Promise<Blog | null> => {
   return result;
 };
 
+
+// ! update Category ----------------------
+const updateBlog = async (
+  blogId: string,
+  payload: Partial<IBlogUpdateRequest>
+): Promise<Blog | null> => {
+
+
+  const isExist= await prisma.blog.findUnique({
+    where: {
+    blogId
+    },
+  });
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Blog Not Found !!!');
+  }
+
+  const updateData = {
+    blogTitle: payload?.blogTitle,
+    blogDescription: payload?.blogDescription,
+    blogImage: payload?.blogImage,
+  };
+
+  const result = await prisma.blog.update({
+    where: {
+      blogId
+    },
+    data: updateData,
+  });
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Blog Updating Failed !!!');
+  }
+  return result;
+};
+
+
+const deleteBlog = async (blogId: string): Promise<Blog | null> => {
+
+  const result = await prisma.$transaction(async transactionClient => { 
+    const isExist = await transactionClient.blog.findUnique({
+      where: {
+        blogId
+      },
+    })
+  
+    if (!isExist) { 
+      throw new ApiError(httpStatus.NOT_FOUND, 'Blog Not Found');
+    }
+
+    const blogDeleted = await transactionClient.blog.delete({
+      where: {
+       blogId
+      },
+    });
+  
+    return blogDeleted;
+
+  })
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Blog Not Deleted');
+  }
+  return result;
+};
+
+
+
 export const BlogService = {
   createNewBlog,
   getAllBlogs,
   getSingleBlog,
+  deleteBlog,
+  updateBlog
 };
