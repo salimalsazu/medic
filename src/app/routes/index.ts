@@ -1,5 +1,4 @@
 import express from 'express';
-
 import { UserRoutes } from '../modules/users/user.routes';
 import { AuthRoutes } from '../modules/auth/auth.routes';
 import { SpecializationRoutes } from '../modules/Specialization/specialization.routes';
@@ -10,6 +9,7 @@ import { ReviewAndRatingRoutes } from '../modules/reviewAndRatings/reviewAndRati
 import { FeedBackRoutes } from '../modules/feedBackForms/feedBackForm.routes';
 import { AppointmentBookingRoutes } from '../modules/appointmentBooking/appointmentBooking.routes';
 import { FaqRoutes } from '../modules/faq/faq.routes';
+import { SlotRoutes } from '../modules/slots/slots.routes';
 
 
 const router = express.Router();
@@ -58,6 +58,10 @@ const moduleRoutes = [
   {
     path: '/faqs',
     route: FaqRoutes,
+  },
+  {
+    path: '/slots',
+    route: SlotRoutes,
   },
   
 ];

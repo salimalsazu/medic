@@ -14,6 +14,12 @@ export type ICategoryRequest = {
   services: Service[];
 };
 
+export type IUpdateCategoryRequest = {
+  categoryName?: string;
+  description?: string;
+
+};
+
 // export type IUpdateStyleRequest = {
 //   image?: string;
 //   fabric?: string;
@@ -21,12 +27,4 @@ export type ICategoryRequest = {
 //   factoryId?: string;
 //   itemId?: string;
 // };
-
-export type IUpdateStyleRequest = {
-  image?: string;
-  fabric?: string;
-  isActiveStyle?: boolean;
-  factoryId?: string;
-  itemId?: string;
-};
 
