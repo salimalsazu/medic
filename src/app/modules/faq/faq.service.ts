@@ -107,6 +107,10 @@ const updateFaqDetails = async (
   return result;
 };
 
+
+
+
+
 export const FaqService = {
   createNewFaq,
   getAllFaqs,

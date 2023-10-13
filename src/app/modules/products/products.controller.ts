@@ -19,6 +19,7 @@ const createNewProduct = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 const getAllProducts = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query,ProductFilterableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
