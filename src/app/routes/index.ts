@@ -6,6 +6,10 @@ import { SpecializationRoutes } from '../modules/Specialization/specialization.r
 import { CategoryRoutes } from '../modules/category/category.routes';
 import { MedServiceRoutes } from '../modules/services/service.routes';
 import { ProductsRoutes } from '../modules/products/products.routes';
+import { ReviewAndRatingRoutes } from '../modules/reviewAndRatings/reviewAndRating.routes';
+import { FeedBackRoutes } from '../modules/feedBackForms/feedBackForm.routes';
+import { AppointmentBookingRoutes } from '../modules/appointmentBooking/appointmentBooking.routes';
+import { FaqRoutes } from '../modules/faq/faq.routes';
 
 
 const router = express.Router();
@@ -38,6 +42,22 @@ const moduleRoutes = [
   {
     path: '/products',
     route:  ProductsRoutes
+  },
+  {
+    path: '/review-ratings',
+    route: ReviewAndRatingRoutes,
+  },
+  {
+    path: '/feedback-forms',
+    route: FeedBackRoutes,
+  },
+  {
+    path: '/appointment-booking',
+    route: AppointmentBookingRoutes,
+  },
+  {
+    path: '/faqs',
+    route: FaqRoutes,
   },
   
 ];

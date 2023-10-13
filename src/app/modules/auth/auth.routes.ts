@@ -1,5 +1,5 @@
-import express, { NextFunction, Request, Response } from 'express';
-import { FileUploadHelper } from '../../../helpers/FileUploadHelper';
+import express from 'express';
+
 import { UserValidation } from '../users/user.validations';
 import { AuthController } from './auth.controller';
 
@@ -9,11 +9,7 @@ const router = express.Router();
 
 router.post(
   '/create-user',
-  FileUploadHelper.upload.single('file'),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = UserValidation.createUser.parse(JSON.parse(req.body.data));
-    return AuthController.createNewUser(req, res, next);
-  }
+AuthController.createNewUser
 );
 
 router.post(

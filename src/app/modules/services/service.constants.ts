@@ -15,11 +15,8 @@ export const ServiceFilterableFields: string[] = [
 
 
 export const serviceSearchableFields: string[] = [
-  'serviceId',
   'serviceName',
-  'description',
   'location',
-  'categoryId',
   'servicePrice',
 ];
 

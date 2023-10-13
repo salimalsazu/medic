@@ -6,9 +6,8 @@ import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
-import { FileUploadHelper } from '../../../helpers/FileUploadHelper';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
-import { IUploadFile } from '../../../interfaces/file';
+
 import prisma from '../../../shared/prisma';
 import {
   ILoginUserResponse,
@@ -20,13 +19,7 @@ import { userRole } from '@prisma/client';
 
 // ! user create
 const createNewUser = async (req: Request) => {
-  const file = req.file as IUploadFile;
 
-  const uploadedImage = await FileUploadHelper.uploadImageToCloudinary(file);
-
-  if (uploadedImage) {
-    req.body.profileImage = uploadedImage.secure_url;
-  }
   const data = (await req.body) as IUserCreate;
 
   console.log("data", data);

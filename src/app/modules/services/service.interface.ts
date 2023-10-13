@@ -16,8 +16,8 @@ export type ICreateNewBlogResponse = {
 export type IServiceFilterRequest = {
   searchTerm?: string | undefined;
   categoryId?: string | undefined;
+  servicePrice?: string | undefined;
 };
-s
 
 export type IUpdateServiceRequest = {
   serviceName?: string;

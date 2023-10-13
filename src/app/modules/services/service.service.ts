@@ -74,7 +74,7 @@ const getAllServices = async (
 ): Promise<IGenericResponse<Service[]>> => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
-  const { searchTerm, ...filterData } = filters;
+  const { searchTerm, servicePrice, ...filterData } = filters;
 
   const andConditions = [];
 
@@ -88,6 +88,16 @@ const getAllServices = async (
       })),
     });
   }
+
+  if (servicePrice) {
+    andConditions.push({
+      servicePrice: {
+        equals: Number(servicePrice),
+      },
+    });
+  }
+
+
 
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
@@ -108,6 +118,10 @@ const getAllServices = async (
       }),
     });
   }
+
+
+
+
 
   const whereConditions: Prisma.ServiceWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
