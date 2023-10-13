@@ -1,13 +1,6 @@
-export const stylesFilterableFields: string[] = [
-  'orderNo',
+export const specializationFilterableFields: string[] = [
+  'specializationName',
   'searchTerm',
-  'factoryId',
-  'styleNo',
-  'profileId',
-  'itemId',
-  'createdAt',
-  'startDate',
-  'endDate',
 ];
 
 export const specializationSearchableFields: string[] = [

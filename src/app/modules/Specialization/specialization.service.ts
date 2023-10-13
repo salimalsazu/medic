@@ -15,6 +15,7 @@ import {
 import {
   ISpecializationFilterRequest,
   ISpecializationRequest,
+  IUpdateSpecializationRequest,
 } from './specialization.interface';
 
 // modules
@@ -124,7 +125,74 @@ const getAllSpecialization = async (
 
 
 
+// ! update Service ----------------------
+const updateSpecialization = async (
+  specializationId: string,
+  payload: Partial<IUpdateSpecializationRequest>
+): Promise<Specialization | null> => {
+
+
+  const isExist = await prisma.specialization.findUnique({
+    where: {
+      specializationId
+    },
+  });
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'specialization Not Found !!!');
+  }
+
+  const updateData = {
+    specializationName: payload?.specializationName,
+    description: payload?.description,
+  };
+
+  const result = await prisma.specialization.update({
+    where: {
+   specializationId
+    },
+    data: updateData,
+  });
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Updating Failed !!!');
+  }
+  return result;
+};
+
+
+
+
+const deleteSpecialization = async (specializationId: string): Promise<Specialization | null> => {
+
+  const isExist = await prisma.specialization.findUnique({
+    where: {
+     specializationId
+    },
+  })
+
+  if (!isExist) { 
+    throw new ApiError(httpStatus.NOT_FOUND, 'specialization Not Found');
+  }
+
+  const result = await prisma.specialization.delete({
+    where: {
+      specializationId
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'specialization Not Deleted');
+  }
+
+  return result;
+};
+
+
+
+
 export const SpecializationService = {
   createSpecialization,
   getAllSpecialization,
+  deleteSpecialization,
+  updateSpecialization
 };

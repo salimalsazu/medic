@@ -4,7 +4,7 @@ import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { IRequestUser } from '../users/user.interface';
-import { stylesFilterableFields } from './specialization.constants';
+import { specializationFilterableFields, stylesFilterableFields } from './specialization.constants';
 import { SpecializationService } from './specialization.service';
 
 const createNewSpecialization = catchAsync(async (req: Request, res: Response) => {
@@ -22,7 +22,7 @@ const createNewSpecialization = catchAsync(async (req: Request, res: Response) =
 
 
 const getAllSpecialization = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, stylesFilterableFields);
+  const filters = pick(req.query, specializationFilterableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
   const result = await SpecializationService.getAllSpecialization(filters, options);
@@ -37,7 +37,40 @@ const getAllSpecialization = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+const updateSpecialization = catchAsync(
+  async (req: Request, res: Response) => {
+    const { specializationId } = req.params;
+    const result = await SpecializationService.updateSpecialization(
+      specializationId,
+      req.body
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'specialization Updated successfully',
+      data: result,
+    });
+  }
+);
+
+
+const deleteSpecialization = catchAsync(async (req: Request, res: Response) => {
+  const { specializationId } = req.params;
+  const result = await SpecializationService.deleteSpecialization(specializationId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `${result?.specializationName} Deleted successfully`,
+  });
+});
+
+
+
 export const SpecializationController = {
   createNewSpecialization,
-  getAllSpecialization
+  getAllSpecialization,
+  deleteSpecialization,
+  updateSpecialization
 };
