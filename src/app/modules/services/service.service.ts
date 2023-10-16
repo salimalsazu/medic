@@ -39,6 +39,7 @@ const createNewService = async (
     location: data.location,
     categoryId: data.categoryId,
     servicePrice: data.servicePrice,
+    serviceStatus: data.serviceStatus,
   };
 
   const result = await prisma.$transaction(async transactionClient => {
@@ -88,6 +89,7 @@ const getAllServices = async (
       })),
     });
   }
+
 
   if (servicePrice) {
     andConditions.push({

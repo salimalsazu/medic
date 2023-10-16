@@ -4,7 +4,7 @@ const createFaq = z.object({
   body: z.object({
     faqTitle: z.string({
       required_error: 'Faq Title  is required',
-      invalid_type_error: 'Faq Title must be in   string',
+      invalid_type_error: 'Faq Title must be in string',
     }),
     faqDescription: z.string({
       required_error: 'Faq Description   is required',

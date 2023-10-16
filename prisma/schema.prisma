@@ -27,8 +27,8 @@ model Profile {
   profileId          String               @id @default(uuid())
   firstName          String
   lastName           String
-  profileImage       String
-  role               userRole
+  profileImage       String?
+  role               userRole             @default(USER)
   contactNumber      String?
   address            String?
   coverPhoto         String?
@@ -68,7 +68,7 @@ model Service {
   serviceImage      String
   servicePrice      Int
   location          String
-  serviceStatus     serviceStatus        @default(available)
+  serviceStatus     chooseServiceStatus
   createdAt         DateTime             @default(now())
   updatedAt         DateTime             @updatedAt
   // 
@@ -223,8 +223,8 @@ enum appointmentStatus {
   rejected
 }
 
-enum serviceStatus {
-  available
-  upcoming
-  rejected
+enum chooseServiceStatus {
+  Available
+  Upcoming
+  Rejected
 }

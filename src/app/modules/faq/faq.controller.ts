@@ -9,8 +9,9 @@ import { IRequestUser } from '../users/user.interface';
 
 const createNewFaq = catchAsync(async (req: Request, res: Response) => {
   const profileId = (req.user as IRequestUser).profileId;
+  console.log(profileId, req.body);
   const result = await FaqService.createNewFaq(profileId, req.body);
-
+  
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

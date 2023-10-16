@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export type IServiceCreateRequest = {
   serviceName: string;
   description: string;
@@ -5,7 +6,15 @@ export type IServiceCreateRequest = {
   location: string;
   categoryId: string;
   servicePrice: number;
+  serviceStatus: chooseServiceStatus;
 };
+
+
+export enum chooseServiceStatus {
+  Available = "Available",
+  Upcoming = "Upcoming",
+  Rejected = "Rejected",
+}
 
 export type ICreateNewBlogResponse = {
   serviceId: string;
@@ -35,4 +44,5 @@ export type ICreateNewServiceResponse = {
   location: string;
   categoryId: string;
   servicePrice: number;
+  serviceStatus: string;
 };

@@ -90,6 +90,11 @@ const createNewUser = async (req: Request) => {
         createdAt: true,
         email: true,
         userId: true,
+        profile: {
+          select: {
+            role: true,
+          },
+        }
       },
     });
 
