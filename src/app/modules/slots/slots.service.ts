@@ -62,8 +62,7 @@ const updateSlot = async (
   }
 
   const updateSlot = {
-    startTime: payload?.startTime,
-    endTime: payload?.endTime,
+    slotTime: payload?.slotTime,
   };
 
   const result = await prisma.timeSlot.update({

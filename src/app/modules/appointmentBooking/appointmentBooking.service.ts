@@ -219,12 +219,10 @@ console.log(payload);
       slotId: payload.slotId,
       appointmentDate: payload.appointmentDate,
       serviceId: payload.serviceId,
-      OR: [
-        { appointmentStatus: "pending" },
-        { appointmentStatus: "approved" },
-      ],
+      appointmentStatus: "approved",   
     },
   });
+
 
   if (takenSlot) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Slot already booked');

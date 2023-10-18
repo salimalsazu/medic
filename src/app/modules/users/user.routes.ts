@@ -1,9 +1,10 @@
 import express from 'express';
 import auth from '../../middlewares/auth';
-import validateRequest from '../../middlewares/validateRequest';
-import { UserValidation } from './user.validations';
+
 import { UserController } from './users.controller';
 import { userRole } from '@prisma/client';
+import validateRequest from '../../middlewares/validateRequest';
+import { UserValidation } from './user.validations';
 
 const router = express.Router();
 
@@ -14,15 +15,19 @@ router.get(
   UserController.getAllUsersController
 );
 
-
 // !  get My Profile ------------------------------>>>
 router.get(
   '/my-profile',
   auth(userRole.ADMIN, userRole.SUPER_ADMIN, userRole.USER, userRole.DOCTOR),
   UserController.getMyProfile
 );
-
-
+// !  Update my User data ------------------------------>>>
+router.patch(
+  '/update-my-email-password',
+  auth(userRole.USER, userRole.ADMIN, userRole.SUPER_ADMIN),
+  validateRequest(UserValidation.updateUser),
+  UserController.updateMyUserInfo
+);
 // !  Update  Profile data ------------------------------>>>
 router.patch(
   '/update-profile/:profileId',
@@ -30,16 +35,6 @@ router.patch(
   validateRequest(UserValidation.updateUser),
   UserController.updateProfileInfo
 );
-
-
-// !  Update  User data ------------------------------>>>
-router.patch(
-  '/update-user/:userId',
-  auth(userRole.ADMIN, userRole.SUPER_ADMIN),
-  validateRequest(UserValidation.updateUser),
-  UserController.updateUserInfo
-);
-
 // !  Update  My Profile data ------------------------------>>>
 router.patch(
   '/update-my-profile',
@@ -47,13 +42,10 @@ router.patch(
   validateRequest(UserValidation.updateUser),
   UserController.updateMyProfileInfo
 );
-
-
-
 // !  get single user ------------------------------>>>
 router.get(
   '/:userId',
-  auth(userRole.ADMIN, userRole.SUPER_ADMIN, userRole.USER, userRole.DOCTOR),
+  auth(userRole.ADMIN, userRole.SUPER_ADMIN),
   UserController.getSingleUser
 );
 
