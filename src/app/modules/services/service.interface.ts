@@ -1,3 +1,5 @@
+import { chooseServiceStatus } from "@prisma/client";
+
 /* eslint-disable no-unused-vars */
 export type IServiceCreateRequest = {
   serviceName: string;
@@ -10,11 +12,11 @@ export type IServiceCreateRequest = {
 };
 
 
-export enum chooseServiceStatus {
-  Available = "Available",
-  Upcoming = "Upcoming",
-  Rejected = "Rejected",
-}
+// export enum chooseServiceStatus {
+//   Available = "Available",
+//   Upcoming = "Upcoming",
+//   Rejected = "Rejected",
+// }
 
 export type ICreateNewBlogResponse = {
   serviceId: string;
@@ -35,6 +37,7 @@ export type IUpdateServiceRequest = {
   location?: string;
   categoryId?: string;
   servicePrice?: number;
+  serviceStatus?: chooseServiceStatus;
 };
 
 export type ICreateNewServiceResponse = {

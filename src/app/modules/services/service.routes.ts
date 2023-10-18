@@ -15,7 +15,7 @@ router.post(
 
 router.get(
   '/',
-  auth(userRole.USER, userRole.ADMIN, userRole.SUPER_ADMIN, userRole.DOCTOR),
+  // auth(userRole.USER, userRole.ADMIN, userRole.SUPER_ADMIN, userRole.DOCTOR),
   MedServiceController.getAllServices
 );
 

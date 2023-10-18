@@ -41,6 +41,22 @@ const getAllAppointment= catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyAppointment = catchAsync(async (req: Request, res: Response) => {
+  const profileId = (req.user as IRequestUser).profileId;
+  const filters = pick(req.query, appointmentFilterableFields);
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+
+  const result = await AppointmentBookingService.getMyAppointment(profileId,filters, options);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'fetched successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 
 
 
@@ -78,5 +94,6 @@ export const AppointmentBookingController = {
   createNewAppointmentBooking,
   getAllAppointment,
   updateAppointment,
-  deleteAppointment
+  deleteAppointment,
+  getMyAppointment,
 };

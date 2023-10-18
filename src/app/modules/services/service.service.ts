@@ -198,7 +198,8 @@ const updateService = async (
     serviceImage: payload?.serviceImage,
     location: payload?.location,
     categoryId: payload?.categoryId,
-    servicePrice: payload?.servicePrice
+    servicePrice: payload?.servicePrice,
+    serviceStatus: payload?.serviceStatus
   };
 
   const result = await prisma.service.update({

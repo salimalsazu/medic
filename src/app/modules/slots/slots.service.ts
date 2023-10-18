@@ -13,8 +13,7 @@ const createNewSlot = async (
   //
   const existingSlot = await prisma.timeSlot.findFirst({
     where: {
-      startTime: payload.startTime,
-      endTime: payload.endTime,
+      slotTime: payload.slotTime,
     },
   });
 
@@ -23,13 +22,11 @@ const createNewSlot = async (
   }
   const createdNewSlot = await prisma.timeSlot.create({
     data: {
-      startTime: payload.startTime,
-      endTime: payload.endTime,
+      slotTime: payload.slotTime,
     },
     select: {
       slotId: true,
-      startTime: true,
-      endTime: true,
+      slotTime: true,
       createdAt: true,
     },
   });
