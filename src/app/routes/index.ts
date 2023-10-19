@@ -49,7 +49,7 @@ const moduleRoutes = [
     route: ReviewAndRatingRoutes,
   },
   {
-    path: '/feedback-forms',
+    path: '/feedbacks',
     route: FeedBackRoutes,
   },
   {

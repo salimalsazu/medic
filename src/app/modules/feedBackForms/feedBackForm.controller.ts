@@ -10,9 +10,7 @@ import pick from '../../../shared/pick';
 //! createNewFeedBack Create
 
 const createNewFeedBack = catchAsync(async (req: Request, res: Response) => {
-  const profileId = (req.user as IRequestUser).profileId;
   const result = await FeedBackFormService.createNewFeedBackForm(
-    profileId,
     req.body
   );
 

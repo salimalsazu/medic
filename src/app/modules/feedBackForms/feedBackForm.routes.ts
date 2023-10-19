@@ -10,14 +10,12 @@ const router = express.Router();
 
 router.post(
   '/add-feedback',
-  auth(userRole.USER),
-  validateRequest(FeedBackValidation.createFeedBack),
   FeedBackController.createNewFeedBack
 );
 
 router.get(
   '/',
-  auth(userRole.USER, userRole.ADMIN, userRole.SUPER_ADMIN, userRole.DOCTOR),
+  auth( userRole.ADMIN, userRole.SUPER_ADMIN, userRole.DOCTOR),
   FeedBackController.getAllFeedBack
 );
 
@@ -29,7 +27,7 @@ router.patch(
 
 router.delete(
   '/:feedbackId',
-  auth(userRole.USER, userRole.ADMIN, userRole.SUPER_ADMIN, userRole.DOCTOR),
+  auth(userRole.ADMIN, userRole.SUPER_ADMIN, userRole.DOCTOR),
   FeedBackController.singleFeedBackDelete
 );
 
