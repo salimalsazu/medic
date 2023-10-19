@@ -49,4 +49,8 @@ router.get(
   UserController.getSingleUser
 );
 
+
+
+
+
 export const UserRoutes = router;
