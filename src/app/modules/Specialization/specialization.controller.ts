@@ -4,7 +4,7 @@ import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { IRequestUser } from '../users/user.interface';
-import { specializationFilterableFields, stylesFilterableFields } from './specialization.constants';
+import { specializationFilterableFields } from './specialization.constants';
 import { SpecializationService } from './specialization.service';
 
 const createNewSpecialization = catchAsync(async (req: Request, res: Response) => {

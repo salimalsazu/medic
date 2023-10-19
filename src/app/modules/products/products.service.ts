@@ -3,19 +3,14 @@ import { Prisma, Product } from '@prisma/client';
 import { Request } from 'express';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
-import { FileUploadHelper } from '../../../helpers/FileUploadHelper';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
-import { IUploadFile } from '../../../interfaces/file';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import {
   ProductSearchableFields,
   productRelationalFields,
   productRelationalFieldsMapper,
-  stylesRelationalFields,
-  stylesRelationalFieldsMapper,
-  stylesSearchableFields,
 } from './products.constants';
 import {
 

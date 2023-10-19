@@ -21,7 +21,7 @@ router.get(
 
 router.get(
   '/:serviceId',
-  auth(userRole.USER, userRole.ADMIN, userRole.SUPER_ADMIN, userRole.DOCTOR),
+  // auth(userRole.USER, userRole.ADMIN, userRole.SUPER_ADMIN, userRole.DOCTOR),
   MedServiceController.getSingleService
 );
 

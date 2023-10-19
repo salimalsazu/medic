@@ -166,7 +166,17 @@ const getSingleService = async (serviceId: string): Promise<Service | null> => {
   const result = await prisma.service.findUnique({
     where: {
       serviceId,
-    }
+    },
+    include: {
+      reviewAndRatings: {
+        include: {
+          profile: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      },
+      }
   });
 
   if (!result) {

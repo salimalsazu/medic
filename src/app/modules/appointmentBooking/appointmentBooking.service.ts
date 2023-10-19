@@ -201,8 +201,6 @@ const updateAppointment = async (
   payload: Partial<IUpdateAppointmentBookingReq>
 ): Promise<AppointmentBooking | null> => {
 
-console.log(payload);
-
   
   const isExist = await prisma.appointmentBooking.findUnique({
     where: {
